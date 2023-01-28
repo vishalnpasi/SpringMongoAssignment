@@ -32,24 +32,17 @@ public class UserService {
 //            Query query = new Query();
 //            query.addCriteria(Criteria.where("email").exists(true));
 //            boolean val = userRepository.findOne(query,UserModel.class);
-            try {
-                List<UserModel> ll = userRepository.findDuplicateEmail(email);
-//                System.out.print(ll + " " + ll.get(0)+""+ll.isEmpty());
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is Already Exist");
-            }catch (Exception err){}
+            List<UserModel> list = userRepository.findDuplicateEmail(email);
+            if(list.isEmpty()==false)
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is Already Exist");
+
             String mobile = userModel.getMobile();
             if(mobile==null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mobile is Mandatory");
 
             String currentOrganization = userModel.getCurrentOrganization();
             if(currentOrganization==null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Current Organization is Mandatory");
-//            String arr[] = {"userName","fullName","email","mobile","currentOrganization"};
-//            for(int i = 0;i<arr.length;i++)
-//                if(arr[i])
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Full Name Mandatory");
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Full Name Mandatory");
-//            userRepository.save(userModel);
-//            userModel.destructure(id,userName,fullName,email,mobile,currentOrganization);
-//            System.out.print(this.id+this.userName+this.fullName+this.email+this.mobile+this.currentOrganization);
+
+            userRepository.save(userModel);
             return ResponseEntity.status(HttpStatus.OK).body(" User Register Successfully with id:" + userModel.getId());
         }
         catch (Exception err){
