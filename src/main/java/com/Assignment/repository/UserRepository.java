@@ -9,4 +9,8 @@ import java.util.List;
 public interface UserRepository extends MongoRepository<UserModel,String> {
     @Query("{email:?0}")
     List<UserModel> findDuplicateEmail(String email);
+
+    @Query("{userName:?0}")
+    List<UserModel> findUser(String userName);
+
 }
