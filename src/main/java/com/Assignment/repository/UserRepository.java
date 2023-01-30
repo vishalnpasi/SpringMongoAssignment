@@ -11,6 +11,6 @@ public interface UserRepository extends MongoRepository<UserModel,String> {
     List<UserModel> findDuplicateEmail(String email);
 
     @Query("{userName:?0}")
-    List<UserModel> findUser(String userName);
+    List<UserModel> findByUserName(String userName);
 
 }

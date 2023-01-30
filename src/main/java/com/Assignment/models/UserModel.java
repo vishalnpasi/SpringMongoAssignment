@@ -3,6 +3,7 @@ package com.Assignment.models;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
@@ -31,14 +32,4 @@ public class UserModel {
     @NotNull(message = "Current Organization Shouldn't be null")
     @Size(min = 2 ,message = "Current Organization min length should be 2")
     private String currentOrganization;
-
-//    public void destructure(String id,String userName,String fullName,String email ,String mobile,String currentOrganization){
-//        id=this.id;
-//        userName = this.userName;
-//        fullName = this.fullName;
-//        email = this.mobile;
-//        mobile = this.mobile;
-//        currentOrganization = this.currentOrganization;
-//    }
-
 }
