@@ -1,15 +1,14 @@
-package com.Assignment.JunitTest;
+package com.Assignment.service;
 
 import com.Assignment.models.UserModel;
 import com.Assignment.repository.UserRepository;
-import com.Assignment.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.List;
 
@@ -24,36 +23,28 @@ public class AssignmentApplicationTests {
 			"9191919191","Albnero");
 	@Autowired
 	private UserService service;
-//    @Autowired
-//    private WebTestClient webTestClient;
 	@MockBean
 	private UserRepository repository;
-
+	@BeforeEach
+	public  void MockFun(){
+		when(repository.findAll()).thenReturn(List.of(user,user));
+		when(repository.save(user)).thenReturn(user);
+		when(repository.findByUserName(userName)).thenReturn((List.of(user)));
+	}
 	@Test
 	public void createUserTest(){
-		when(repository.save(user)).thenReturn(user);
 		assertEquals(user,service.createUser(user));
-
-//        webTestClient.get()
-//                .uri("/demo")
-//                .exchange().expectStatus().isOk()
-//                .expectBody(String.class)
-//                .isEqualTo("hello");
 	}
 	@Test
 	public void getUsersTest(){
-		when(repository.findAll()).thenReturn(List.of(user,user));
 		assertEquals(2,service.getUsers().size());
 	}
 	@Test
 	public void updateUserTest() throws Exception {
-		when(repository.findByUserName(userName)).thenReturn((List.of(user)));
-		when(repository.save(user)).thenReturn((user));
 		assertEquals("Updated Successfully",service.updateUser(userName));
 	}
 	@Test
 	public void deleteUser() throws Exception {
-		when(repository.findByUserName(userName)).thenReturn(List.of(user));
 		service.deleteByUserName(userName);
 		verify(repository,times(1)).deleteById("1");
 	}

@@ -1,6 +1,7 @@
-package com.Assignment.SpringIntegretionTest;
+package com.Assignment.controller;
 import com.Assignment.models.UserModel;
 import com.Assignment.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import static org.mockito.Mockito.*;
 public class SpringIntegrationTest {
     @LocalServerPort
     private int port;
+
+    private String userName="vishal";
     @Autowired
 //    private WebTestClient webTestClient;
     private WebClient.Builder webTestClient;
@@ -37,10 +40,14 @@ public class SpringIntegrationTest {
                 .retrieve().toEntity(String.class).block();
         System.out.println(response.getBody());
     }
+    @BeforeEach
+    public  void mockFun(){
+        when(repository.save(user)).thenReturn(user);
+        when(repository.findAll()).thenReturn(List.of(user,user,user));
+        when(repository.findByUserName(userName)).thenReturn(List.of(user));
+    }
     @Test
     public void createUserTest(){
-        when(repository.save(user)).thenReturn(user);
-
         ResponseEntity<UserModel> response = webTestClient
                 .baseUrl("http://localhost:"+port)
                 .build()
@@ -53,8 +60,6 @@ public class SpringIntegrationTest {
     }
     @Test
     public void getUsersTest(){
-        when(repository.findAll()).thenReturn(List.of(user,user,user));
-
         ResponseEntity<List<UserModel>> response = webTestClient
                 .baseUrl("http://localhost:"+port)
                 .build()
@@ -66,11 +71,6 @@ public class SpringIntegrationTest {
     }
     @Test
     public void updateUserTest(){
-        String userName="vishal";
-
-        when(repository.findByUserName(userName)).thenReturn(List.of(user));
-        when(repository.save(user)).thenReturn(user);
-
         ResponseEntity<String> response = webTestClient
                 .baseUrl("http://localhost:"+port)
                 .build()
@@ -83,11 +83,6 @@ public class SpringIntegrationTest {
     }
     @Test
     public void deleteUserTest(){
-        String userName="vishal";
-
-        when(repository.findByUserName(userName)).thenReturn(List.of(user));
-        when(repository.save(user)).thenReturn(user);
-
         ResponseEntity<String> response = webTestClient
                 .baseUrl("http://localhost:"+port)
                 .build()
@@ -99,39 +94,3 @@ public class SpringIntegrationTest {
         assertEquals(response.getStatusCode(),HttpStatus.OK);
     }
 }
-
-
-
-
-//            webTestClient.get()
-//                .uri("/demo")
-//                .exchange().expectStatus().isOk()
-//                .expectBody(String.class)
-//                .isEqualTo("hello");
-//
-//        WebClient webClient = WebClient.create();
-//        String responseJson = webClient.get()
-//                .uri("https://petstore.swagger.io/v2/pet/findByStatus?status=available")
-//                .exchange()
-//                .block()
-//                .bodyToMono(String.class)
-//                .block();
-
-//        webTestClient.post()
-//                .uri("/demo")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .bodyValue(new LoginDetails(username, password))
-//                .exchange()
-//                .expectHeader()
-//                .exists(HttpHeaders.AUTHORIZATION)
-//                .returnResult(Map.class);
-
-
-
-//        webTestClient.post()
-//                .uri("/user")
-//                .bodyValue(user)
-//                .exchange()
-////                        .returnResult(UserModel.class)
-//                .expectStatus().isCreated()
-//                .expectBody(ResponseEntity.class);

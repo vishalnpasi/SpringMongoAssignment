@@ -4,6 +4,8 @@ import com.Assignment.models.UserModel;
 import com.Assignment.repository.UserRepository;
 import com.Assignment.service.UserService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,19 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    Logger logger = LoggerFactory.getLogger(UserController.class);
+    @GetMapping("/demo")
+    public String getApi(){
+        logger.error("FATAL ERROR");
+        logger.info("Entered in get(/demo) api");
+        logger.debug("Debug");
+        logger.warn("Warning");
+        logger.trace("Trace");
+        return userService.getTest();
+    }
     @PostMapping("/user")
     public ResponseEntity<UserModel> saveUser(@RequestBody @Valid UserModel userModel)throws Exception{
+        logger.info("Entered in post(/user) api");
         return new ResponseEntity<>(userService.createUser(userModel),HttpStatus.CREATED);
     }
     @GetMapping("/user")
@@ -34,11 +47,6 @@ public class UserController {
     @DeleteMapping("/user/{username}")
     public ResponseEntity<String> DeleteUser(@PathVariable String username)throws Exception{
         return new ResponseEntity<>(userService.deleteByUserName(username),HttpStatus.OK);
-    }
-
-    @GetMapping("/demo")
-    public String getApi(){
-        return userService.getTest();
     }
     @GetMapping("/users/{userName}")
     public ResponseEntity<?> getByUserName(@PathVariable String userName){
