@@ -16,9 +16,9 @@ public class UserService {
     private UserRepository userRepository;
         public UserModel createUser(UserModel userModel){
         try {
-
 //            String email = userModel.getEmail();
 //            List<UserModel> list = userRepository.findDuplicateEmail(email);
+//            if(list.isEmpty()==false || userModel) return null;
             return userRepository.save(userModel);
         }
         catch (Exception err){

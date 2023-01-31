@@ -33,20 +33,37 @@ public class AssignmentApplicationTests {
 	}
 	@Test
 	public void createUserTest(){
-		assertEquals(user,service.createUser(user));
+		assertEquals(service.createUser(user),user);
+
+		// invalid test case..
+		assertEquals(null,service.createUser(new UserModel("123","demo"," vishal pasi",
+				"", "9191919191","Albnero")));
 	}
 	@Test
 	public void getUsersTest(){
+
 		assertEquals(2,service.getUsers().size());
+
+		// Invalid Test Case..
+		when(repository.findAll()).thenReturn(List.of());
+		assertEquals(0,service.getUsers().size());
 	}
 	@Test
 	public void updateUserTest() throws Exception {
+
 		assertEquals("Updated Successfully",service.updateUser(userName));
+
+		// Invalid Test Case...
+		assertEquals(service.updateUser("xyz"),"Data Not Found");
 	}
 	@Test
 	public void deleteUser() throws Exception {
 		service.deleteByUserName(userName);
 		verify(repository,times(1)).deleteById("1");
+
+		// Invalid Test Case...
+		service.deleteByUserName("xyz");
+		verify(repository,times(0)).deleteById("xyz");
 	}
 }
 

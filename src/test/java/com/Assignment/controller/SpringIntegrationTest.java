@@ -30,6 +30,8 @@ public class SpringIntegrationTest {
     private UserRepository repository;
     private UserModel user = new UserModel("123","demo"," vishal pasi", "vishal@gmail",
             "9191919191","Albnero");
+    private UserModel invalidUser = new UserModel("123","demo"," vishal pasi", "",
+            "9191919191","Albnero");
     @Test
     public void exampleTest() {
         ResponseEntity<?> response = webTestClient
@@ -58,6 +60,21 @@ public class SpringIntegrationTest {
         assertEquals(response.getBody().getFullName(),user.getFullName());
         assertEquals(response.getStatusCode(), HttpStatus.CREATED);
     }
+//    @Test
+//    public void createUserFailTest(){
+//        when(repository.save(invalidUser)).thenReturn(null);
+//        ResponseEntity<UserModel> response = webTestClient
+//                .baseUrl("http://localhost:"+port)
+//                .build()
+//                .post()
+//                .uri("/user")
+//                .bodyValue(invalidUser)
+//                .retrieve()
+//                .toEntity(UserModel.class).block();
+//        System.out.println("vi:"+response+":end");
+//        assertEquals(response.getBody()," Plz Enter Valid Email");
+//        assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+//    }
     @Test
     public void getUsersTest(){
         ResponseEntity<List<UserModel>> response = webTestClient

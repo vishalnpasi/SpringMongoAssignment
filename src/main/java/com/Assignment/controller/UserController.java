@@ -34,10 +34,13 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity<UserModel> saveUser(@RequestBody @Valid UserModel userModel)throws Exception{
         logger.info("Entered in post(/user) api");
-        return new ResponseEntity<>(userService.createUser(userModel),HttpStatus.CREATED);
+        UserModel savedUser = userService.createUser(userModel);
+//        if(savedUser==null)
+        return new ResponseEntity<>(savedUser,HttpStatus.CREATED);
     }
     @GetMapping("/user")
     public ResponseEntity<List<UserModel>> findUsers(){
+
         return new ResponseEntity<>(userService.getUsers(),HttpStatus.OK);
     }
     @PutMapping("/user/{userName}")
