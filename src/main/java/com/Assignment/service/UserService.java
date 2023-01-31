@@ -7,35 +7,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-        public ResponseEntity<UserModel> createUser(UserModel userModel){
+        public UserModel createUser(UserModel userModel){
         try {
 
 //            String email = userModel.getEmail();
 //            List<UserModel> list = userRepository.findDuplicateEmail(email);
-//            if(list.isEmpty()==false)
-//                    return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is Already Exist");
-
-//            return userRepository.save(userModel);
-//            return ResponseEntity.status(HttpStatus.OK).body(" User Register Successfully with id:" + userModel.getId());
-            return new ResponseEntity<>(userRepository.save(userModel),HttpStatus.CREATED);
+            return userRepository.save(userModel);
         }
         catch (Exception err){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new UserModel());
+            return new UserModel();
         }
     }
-    public ResponseEntity<List<UserModel>> getUsers(){
+    public List<UserModel> getUsers(){
         List<UserModel> list = userRepository.findAll();
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return list;
     }
-    public ResponseEntity<String> updateUser(String userName)throws Exception{
+    public String updateUser(String userName)throws Exception{
         List<UserModel> users = userRepository.findByUserName(userName);
-        if(users.isEmpty()) return new ResponseEntity<>("Data Not Found",HttpStatus.NOT_FOUND);
+        if(users.isEmpty()) return "Data Not Found";
         UserModel u = users.get(0);
         String fullName = u.getFullName();
         String str = "";
@@ -49,19 +45,22 @@ public class UserService {
             else str+=fullName.charAt(i);
         }
         u.setFullName(str);
-        UserModel savedData = userRepository.save(u);
-//        return new ResponseEntity<>(savedData,HttpStatus.OK);
-//        return savedData;
-        return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
+        userRepository.save(u);
+        return "Updated Successfully";
     }
-    public ResponseEntity<String> deleteByUserName(String userName)throws Exception{
+    public String deleteByUserName(String userName)throws Exception{
 
         List<UserModel> list = userRepository.findByUserName(userName);
-        if(list.isEmpty())
-            return new ResponseEntity<>("DATA NOT FOUND",HttpStatus.NOT_FOUND);
+        if(list.isEmpty()) return "DATA NOT FOUND";
 
         userRepository.deleteById(list.get(0).getId());
-        return new ResponseEntity<>("Deleted successfull",HttpStatus.OK);
+        return "Deleted Successfully";
+    }
+    public String getTest(){
+            return "hello";
+    }
+    public UserModel findByUserName(String userName){
+            return userRepository.findByUserName(userName).get(0);
     }
     public static char generateRandom(int i ){
         switch (i){
